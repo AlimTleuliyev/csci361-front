@@ -1,6 +1,10 @@
 // LoginPage.js
 import React, { useState } from 'react';
-const LoginPage = () => {
+import { useNavigate } from 'react-router-dom';
+
+
+    const LoginPage = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -13,33 +17,49 @@ const LoginPage = () => {
       return;
     }
 
-    // Simulate authentication logic
-    // In a real-world scenario, you would make an API call to your server for authentication
-    try {
-      // Simulating an API call
+      try {
+        // Simulating an API call
         const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/authorize/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
 
-      // Check if authentication was successful
-      if (response.ok) {
-        alert('Sign-in successful!');
-        // Redirect or perform other actions after successful sign-in
-      } else {
-        alert('Sign-in failed. Please check your email and password.');
+        // Check if authentication was successful
+        if (response.ok) {
+          // Assuming the server returns the user role
+          const { role } = await response.json();
+
+          // Redirect based on the user role
+          switch (role) {
+            case 'admin':
+              navigate('/admin');
+              break;
+            case 'driver':
+              navigate('/driver');
+              break;
+            case 'maintenance':
+              navigate('/maintenance-profile');
+              break;
+            default:
+              navigate('/user-profile');
+          }
+        } else {
+          alert('Sign-in failed. Please check your email and password.');
+        }
+      } catch (error) {
+        console.error('Error during sign-in:', error);
+        alert('An error occurred during sign-in. Please try again.');
       }
-    } catch (error) {
-      console.error('Error during sign-in:', error);
-      alert('An error occurred during sign-in. Please try again.');
-    }
-  };
+    };
+
 
     return (
+      
         <div>
+
             <h2>Sign In</h2>
             <form onSubmit={handleSignIn}>
                 <label htmlFor="email">Email:</label>
@@ -63,6 +83,8 @@ const LoginPage = () => {
                 <button type="submit">Sign In</button>
             </form>
         </div>
+
+        
     );
 };
 

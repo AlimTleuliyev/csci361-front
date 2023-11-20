@@ -1,31 +1,46 @@
-// Driver.js
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 
-function Driver() {
-    const { driverId } = useParams();
+import React, { useState, useEffect } from 'react';
+
+const DriverProfile = () => {
     const [driverInfo, setDriverInfo] = useState(null);
 
-    // Fetch driver information based on driverId
-    // You can use a useEffect hook to fetch data from the server
+    useEffect(() => {
+        // Fetch driver information from the backend
+        fetchDriverInfo();
+    }, []);
 
-    //useEffect(() => {
-        // Fetch driver info based on driverId and set it to the state
-        // Example: fetchDriverInfo(driverId).then((data) => setDriverInfo(data));
-    //}, [driverId]);
+    const fetchDriverInfo = async (id) => {
+        try {
+            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/users/${id}', {
+                // Add authentication headers if needed
+            });
 
-    if (!driverInfo) {
-        return <div>Loading...</div>;
-    }
+            if (response.ok) {
+                const data = await response.json();
+                setDriverInfo(data);
+            } else {
+                console.error('Failed to fetch driver information:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching driver information:', error);
+        }
+    };
 
     return (
-        <div>
-            <h2>{driverInfo.name}'s Profile</h2>
-            <p>Driver ID: {driverInfo.id}</p>
-            <p>Email: {driverInfo.email}</p>
-            {/* Add more details as needed */}
+        <div className="driver-profile">
+            <h1>Driver Profile</h1>
+            {driverInfo ? (
+                <div>
+                    <p>IIN: {driverInfo.iin}</p>
+                    <p>Name: {driverInfo.name}</p>
+                    <p>Surname: {driverInfo.surname}</p>
+                    {/* Display other driver information */}
+                </div>
+            ) : (
+                <p>Loading driver information...</p>
+            )}
         </div>
     );
-}
+};
 
-export default Driver;
+export default DriverProfile;

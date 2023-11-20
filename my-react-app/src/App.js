@@ -3,8 +3,12 @@ import React from 'react';
 import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import LoginPage from './LoginPage.js';
 import './App.css';
+import About from './About.js';
 import Driver from './Driver.js';
-
+import Auction from './Auction.js';
+import AdminPage from './AdminPage.js';
+import Contact from './Contact.js';
+import AdminVehiclePage from './AdminVehiclePage.js';
 
 function App() {
   return (
@@ -15,7 +19,14 @@ function App() {
         <Routes>
           <Route exact path="/" element={<MainContent />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/contact" element={<Driver />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/services" element={<MainContent />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/auction" element={<Auction />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/driver" element={<Driver />} />
+          <Route path="/adminVehicles" element={<AdminVehiclePage />} />
+
         </Routes>
       </div>
     </Router>
@@ -29,7 +40,7 @@ function Navbar() {
         <li><a href="services">Services</a></li>
         <li><a href="about">About Us</a></li>
         <li><a href="contact">Contact</a></li>
-        <li><a href="author">Author</a></li>
+        <li><a href="auction">Auction</a></li>
         <li><a href="login">Login</a></li>
       </ul>
     </nav>

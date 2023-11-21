@@ -9,6 +9,8 @@ import Auction from './Auction.js';
 import AdminPage from './AdminPage.js';
 import Contact from './Contact.js';
 import AdminVehiclePage from './AdminVehiclePage.js';
+import MaintenancePage from './MaintenancePage.js';
+import FuelingPage from './FuelingPage.js';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/driver" element={<Driver />} />
           <Route path="/adminVehicles" element={<AdminVehiclePage />} />
+          <Route path="/maintenance-page" element={<MaintenancePage />} />
+          <Route path="/fuel-page" element={<FuelingPage />} />
 
         </Routes>
       </div>

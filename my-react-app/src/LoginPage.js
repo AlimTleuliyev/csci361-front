@@ -40,9 +40,12 @@ import { useNavigate } from 'react-router-dom';
             case 'driver':
               navigate('/driver');
               break;
-            case 'maintenance':
-              navigate('/maintenance-profile');
+            case 'maintainer':
+              navigate('/maintenance-page');
               break;
+            case 'fueler':
+            navigate('/fuel-page');
+            break;
             default:
               navigate('/user-profile');
           }

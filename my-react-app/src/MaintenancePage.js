@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { createPortal } from 'react-dom'
 import { GET_LIMITS, getVehicles, getUsers, UpdateButtonRow } from './PageUtils';
+import './SwalModal.css';
 
 
 // My sincere apologies for the bloat
@@ -79,62 +80,62 @@ function MaintenancePage()
         },
         {
             name: 'Actions',
-            cell: (row) => 
+            cell: (row) => // TODO: fix modal body popup for every row (reuse addbutton's modal body; feed it) 
                     <>
-                    <UpdateButtonRow rowId={row.id} fetchMethod={fetchMaintRecords} setSwalShownUpdate={setSwalShownUpdate} page={'Maintenance'} />
+                    <UpdateButtonRow rowId={row.id} fetchMethod={fetchMaintRecords} setSwalShownUpdate={setSwalShownUpdate} page={'maintenance'} />
                     {swalShownUpdate &&
                         createPortal(
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', }}>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>vehicle_id:</div>
-                            <select style={{ marginLeft: '0.5em', }} id="vehicle_id" class="swal2-select" value={row.vehicle_id}>
+                            <select style={{ marginLeft: '0.5em', }} id="vehicle_id" className="swal2-select" defaultValue={row.vehicle_id}>
                             {vehicles.map((vehicle) => <option value={vehicle.id}>{vehicle.id} - {vehicle.license_plate} - {vehicle.model}</option>)}
                             </select>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>driver_id:</div>
-                            <select style={{ marginLeft: '0.5em', }} id="driver_id" class="swal2-select" value={row.driver_id}>
+                            <select style={{ marginLeft: '0.5em', }} id="driver_id" className="swal2-select" defaultValue={row.driver_id}>
                             {users.filter(user => user.role === 'driver').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                             </select>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>maintainer_id:</div>
-                            <select style={{ marginLeft: '0.5em', }} id="maintainer_id" class="swal2-select" value={row.maintainer_id}>
+                            <select style={{ marginLeft: '0.5em', }} id="maintainer_id" className="swal2-select" defaultValue={row.maintainer_id}>
                             {users.filter(user => user.role === 'maintainer').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                             </select>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>mileage:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="mileage" class="swal2-input" placeholder="mileage" value={row.mileage} /> 
+                            <input style={{ marginLeft: '0.5em', }} id="mileage" type="number" className="swal2-input" placeholder="mileage" defaultValue={row.mileage} /> 
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>date:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="date" type="date" class="swal2-input" placeholder="date" value={row.date} /> 
+                            <input style={{ marginLeft: '0.5em', }} id="date" type="date" className="swal2-input" placeholder="date" defaultValue={row.date} /> 
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>time:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="time" type="time" class="swal2-input" placeholder="time" value={row.time} />
+                            <input style={{ marginLeft: '0.5em', }} id="time" type="time" className="swal2-input" placeholder="time" defaultValue={row.time} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>maintenance_description:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="maintenance_description" class="swal2-input" placeholder="maintenance_description" value={row.maintenance_description} />
+                            <input style={{ marginLeft: '0.5em', }} id="maintenance_description" className="swal2-input" placeholder="maintenance_description" defaultValue={row.maintenance_description} />
                             </div>
-                            {/*<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><label style={{ marginBottom: 0, }} for="status">Status:</label><input style={{ marginTop: '8px', }} id="status" class="swal2-input" name="status" type="checkbox"></div>*/}
+                            {/*<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><label style={{ marginBottom: 0, }} for="status">Status:</label><input style={{ marginTop: '8px', }} id="status" className="swal2-input" name="status" type="checkbox"></div>*/}
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>repairing_parts:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="repairing_parts" class="swal2-input" placeholder="repairing_parts" value={row.repairing_parts} />
+                            <input style={{ marginLeft: '0.5em', }} id="repairing_parts" className="swal2-input" placeholder="repairing_parts" defaultValue={row.repairing_parts} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>replaced_parts:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="replaced_parts" class="swal2-input" placeholder="replaced_parts" value={row.replaced_parts} />
+                            <input style={{ marginLeft: '0.5em', }} id="replaced_parts" className="swal2-input" placeholder="replaced_parts" defaultValue={row.replaced_parts} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>images:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="images" class="swal2-input" placeholder="images" value={row.images} />
+                            <input style={{ marginLeft: '0.5em', }} id="images" className="swal2-input" placeholder="images" defaultValue={row.images} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>total_cost:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="total_cost" type="number" class="swal2-input" placeholder="total_cost" value={row.total_cost} />
+                            <input style={{ marginLeft: '0.5em', }} id="total_cost" type="number" className="swal2-input" placeholder="total_cost" defaultValue={row.total_cost} />
                             </div>
                             </div>,
                             Swal.getHtmlContainer()
@@ -240,6 +241,7 @@ function MaintenancePage()
             {
                 title: 'Add your Maintenance Record',
                 focusConfirm: false,
+                customClass: 'swal-wide',
                 didOpen: () => setSwalShownAdd(true),
                 didClose: () => setSwalShownAdd(false),
                 preConfirm: () => {
@@ -249,7 +251,7 @@ function MaintenancePage()
                         maintainer_id: document.getElementById('maintainer_id').value,
                         mileage: document.getElementById('mileage').value,
                         date: document.getElementById('date').value,
-                        time: document.getElementById('time').value + ':00.000Z',
+                        time: document.getElementById('time').value + 'Z',
                         maintenance_description: document.getElementById('maintenance_description').value,
                         //status: document.getElementById('status').value,
                         repairing_parts: document.getElementById('repairing_parts').value,
@@ -305,26 +307,26 @@ function MaintenancePage()
             {/* Use createPortal to use the same state between your app and SweetAlert2 */}
             {swalShownAdd &&
                 createPortal(
-                    <>
-                    <select id="vehicle_id" class="swal2-select">
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', }}>
+                    <select id="vehicle_id" className="swal2-select">
                     {vehicles.map((vehicle) => <option value={vehicle.id}>{vehicle.id} - {vehicle.license_plate} - {vehicle.model}</option>)}
                     </select>
-                    <select id="driver_id" class="swal2-select">
+                    <select id="driver_id" className="swal2-select">
                     {users.filter(user => user.role === 'driver').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                     </select>
-                    <select id="maintainer_id" class="swal2-select">
+                    <select id="maintainer_id" className="swal2-select">
                     {users.filter(user => user.role === 'maintainer').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                     </select>
-                    <input id="mileage" class="swal2-input" placeholder="mileage" /> 
-                    <input id="date" type="date" class="swal2-input" placeholder="date" /> 
-                    <input id="time" type="time" class="swal2-input" placeholder="time" />
-                    <input id="maintenance_description" class="swal2-input" placeholder="maintenance_description" />
-                    {/*<div style="display: flex; align-items: center; justify-content: center"><label style="margin-bottom: 0;" for="status">Status:</label><input style="margin-top: 8px;" id="status" class="swal2-input" name="status" type="checkbox"></div>*/}
-                    <input id="repairing_parts" class="swal2-input" placeholder="repairing_parts" />
-                    <input id="replaced_parts" class="swal2-input" placeholder="replaced_parts" />
-                    <input id="images" class="swal2-input" placeholder="images" />
-                    <input id="total_cost" type="number" class="swal2-input" placeholder="total_cost" />
-                    </>,
+                    <input id="mileage" className="swal2-input" placeholder="mileage" /> 
+                    <input id="date" type="date" className="swal2-input" placeholder="date" /> 
+                    <input id="time" type="time" className="swal2-input" placeholder="time" />
+                    <input id="maintenance_description" className="swal2-input" placeholder="maintenance_description" />
+                    {/*<div style="display: flex; align-items: center; justify-content: center"><label style="margin-bottom: 0;" for="status">Status:</label><input style="margin-top: 8px;" id="status" className="swal2-input" name="status" type="checkbox"></div>*/}
+                    <input id="repairing_parts" className="swal2-input" placeholder="repairing_parts" />
+                    <input id="replaced_parts" className="swal2-input" placeholder="replaced_parts" />
+                    <input id="images" className="swal2-input" placeholder="images" />
+                    <input id="total_cost" type="number" className="swal2-input" placeholder="total_cost" />
+                    </div>,
                 Swal.getHtmlContainer()
             )}
             

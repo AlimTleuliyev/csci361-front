@@ -4,6 +4,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { createPortal } from 'react-dom'
 import { GET_LIMITS, getVehicles, getUsers, UpdateButtonRow } from './PageUtils';
+import './SwalModal.css';
 
 function FuelingPage()
 {
@@ -58,56 +59,56 @@ function FuelingPage()
             name: 'Actions',
             cell: (row) => 
                     <>
-                    <UpdateButtonRow rowId={row.id} fetchMethod={fetchFuelRecords} setSwalShownUpdate={setSwalShownUpdate} page={'Fuel'} />
+                    <UpdateButtonRow rowId={row.id} fetchMethod={fetchFuelRecords} setSwalShownUpdate={setSwalShownUpdate} page={'fuel'} />
                     {swalShownUpdate &&
                         createPortal(
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', }}>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>vehicle_id:</div>
-                            <select style={{ marginLeft: '0.5em', }} id="vehicle_id" class="swal2-select" value={row.vehicle_id}>
+                            <select style={{ marginLeft: '0.5em', }} id="updf_vehicle_id" className="swal2-select" defaultValue={row.vehicle_id}>
                             {vehicles.map((vehicle) => <option value={vehicle.id}>{vehicle.id} - {vehicle.license_plate} - {vehicle.model}</option>)}
                             </select>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>driver_id:</div>
-                            <select style={{ marginLeft: '0.5em', }} id="driver_id" class="swal2-select" value={row.driver_id}>
+                            <select style={{ marginLeft: '0.5em', }} id="updf_driver_id" className="swal2-select" defaultValue={row.driver_id}>
                             {users.filter(user => user.role === 'driver').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                             </select>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>fueler_id:</div>
-                            <select style={{ marginLeft: '0.5em', }} id="fueler_id" class="swal2-select" value={row.fueler_id}>
+                            <select style={{ marginLeft: '0.5em', }} id="updf_fueler_id" className="swal2-select" defaultValue={row.fueler_id}>
                             {users.filter(user => user.role === 'fueler').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                             </select>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>date:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="date" type="date" class="swal2-input" placeholder="date" value={row.date} /> 
+                            <input style={{ marginLeft: '0.5em', }} id="updf_date" type="date" className="swal2-input" placeholder="date" defaultValue={row.date} /> 
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>time:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="time" type="time" class="swal2-input" placeholder="time" value={row.time} />
+                            <input style={{ marginLeft: '0.5em', }} id="updf_time" type="time" className="swal2-input" placeholder="time" defaultValue={row.time} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>fuel_amount:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="fuel_amount" type="number" class="swal2-input" placeholder="fuel_amount" value={row.fuel_amount} />
+                            <input style={{ marginLeft: '0.5em', }} id="updf_fuel_amount" type="number" className="swal2-input" placeholder="fuel_amount" defaultValue={row.fuel_amount} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>total_cost:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="total_cost" type="number" class="swal2-input" placeholder="total_cost" value={row.total_cost} />
+                            <input style={{ marginLeft: '0.5em', }} id="updf_total_cost" type="number" className="swal2-input" placeholder="total_cost" defaultValue={row.total_cost} />
                             </div>
-                            {/*<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><label style={{ marginBottom: 0, }} for="status">Status:</label><input style={{ marginTop: '8px', }} id="status" class="swal2-input" name="status" type="checkbox"></div>*/}
+                            {/*<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><label style={{ marginBottom: 0, }} for="status">Status:</label><input style={{ marginTop: '8px', }} id="status" className="swal2-input" name="status" type="checkbox"></div>*/}
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>gas_station_name:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="gas_station_name" class="swal2-input" placeholder="gas_station_name" value={row.gas_station_name} />
+                            <input style={{ marginLeft: '0.5em', }} id="updf_gas_station_name" className="swal2-input" placeholder="gas_station_name" defaultValue={row.gas_station_name} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>images_before:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="images_before" class="swal2-input" placeholder="images_before" value={row.images_before} />
+                            <input style={{ marginLeft: '0.5em', }} id="updf_images_before" className="swal2-input" placeholder="images_before" defaultValue={row.images_before} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', }}>
                             <div style={{ marginTop: '1em', }}>images_after:</div>
-                            <input style={{ marginLeft: '0.5em', }} id="images_after" class="swal2-input" placeholder="images_after" value={row.images_after} />
+                            <input style={{ marginLeft: '0.5em', }} id="updf_images_after" className="swal2-input" placeholder="images_after" defaultValue={row.images_after} />
                             </div>
                             </div>,
                             Swal.getHtmlContainer()
@@ -213,6 +214,7 @@ function FuelingPage()
             {
                 title: 'Add your Fuel Record',
                 focusConfirm: false,
+                customClass: 'swal-wide',
                 didOpen: () => setSwalShownAdd(true),
                 didClose: () => setSwalShownAdd(false),
                 preConfirm: () => {
@@ -221,7 +223,7 @@ function FuelingPage()
                         fueler_id: document.getElementById('fueler_id').value,
                         driver_id: document.getElementById('driver_id').value,
                         date: document.getElementById('date').value,
-                        time: document.getElementById('time').value + ':00.000Z',
+                        time: document.getElementById('time').value + 'Z',
                         fuel_amount: document.getElementById('fuel_amount').value,
                         total_cost: document.getElementById('total_cost').value,
                         gas_station_name: document.getElementById('gas_station_name').value,
@@ -276,24 +278,24 @@ function FuelingPage()
             {/* Use createPortal to use the same state between your app and SweetAlert2 */}
             {swalShownAdd &&
                 createPortal(
-                    <>
-                    <select id="vehicle_id" class="swal2-select">
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', }}>
+                    <select id="vehicle_id" className="swal2-select">
                     {vehicles.map((vehicle) => <option value={vehicle.id}>{vehicle.id} - {vehicle.license_plate} - {vehicle.model}</option>)}
                     </select>
-                    <select id="driver_id" class="swal2-select">
+                    <select id="driver_id" className="swal2-select">
                     {users.filter(user => user.role === 'driver').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                     </select>
-                    <select id="fueler_id" class="swal2-select">
+                    <select id="fueler_id" className="swal2-select">
                     {users.filter(user => user.role === 'fueler').map((user) => <option value={user.id}>{user.id} - {user.surname} - {user.name} - {user.middlename}</option>)}
                     </select>
-                    <input id="date" type="date" class="swal2-input" placeholder="date" /> 
-                    <input id="time" type="time" class="swal2-input" placeholder="time" />
-                    <input id="fuel_amount" type="number" class="swal2-input" placeholder="fuel_amount" />
-                    <input id="total_cost" type="number" class="swal2-input" placeholder="total_cost" />
-                    <input id="gas_station_name" class="swal2-input" placeholder="gas_station_name" />
-                    <input id="images_before" class="swal2-input" placeholder="images_before" />
-                    <input id="images_after" class="swal2-input" placeholder="images_after" />
-                    </>,
+                    <input id="date" type="date" className="swal2-input" placeholder="date" /> 
+                    <input id="time" type="time" className="swal2-input" placeholder="time" />
+                    <input id="fuel_amount" type="number" className="swal2-input" placeholder="fuel_amount" />
+                    <input id="total_cost" type="number" className="swal2-input" placeholder="total_cost" />
+                    <input id="gas_station_name" className="swal2-input" placeholder="gas_station_name" />
+                    <input id="images_before" className="swal2-input" placeholder="images_before" />
+                    <input id="images_after" className="swal2-input" placeholder="images_after" />
+                    </div>,
                 Swal.getHtmlContainer()
             )}
             

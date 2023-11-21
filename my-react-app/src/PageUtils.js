@@ -1,11 +1,12 @@
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import './SwalModal.css';
 
 export const GET_LIMITS = 15; // for GET fetches (default: 10)
 
 export async function getVehicles() {
     let data = [];
-    try {
+    try { // this API call is a bottleneck if we only need vehicle_id : license_plate pairs (no routes/auctions) 
         const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/vehicle/?skip=0&limit=${GET_LIMITS}`);
         data = await response.json();
     }
@@ -19,7 +20,7 @@ export async function getVehicles() {
 export async function getUsers() {
     let data = [];
     try {
-        const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/users/?skip=0&limit=${GET_LIMITS}`);
+        const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/users/all/`);
         data = await response.json();
     }
     catch (error) {
@@ -29,33 +30,6 @@ export async function getUsers() {
     return data;
 }
 
-const maint_record_elements = {
-    vehicle_id: document.getElementById('upd_vehicle_id').value,
-    driver_id: document.getElementById('upd_driver_id').value,
-    maintainer_id: document.getElementById('upd_maintainer_id').value,
-    mileage: document.getElementById('upd_mileage').value,
-    date: document.getElementById('upd_date').value,
-    time: document.getElementById('upd_time').value + ':00.000Z', // last time, improper formats dropped the server
-    maintenance_description: document.getElementById('upd_maintenance_description').value,
-    repairing_parts: document.getElementById('upd_repairing_parts').value,
-    replaced_parts: document.getElementById('upd_replaced_parts').value,
-    images: document.getElementById('upd_images').value,
-    total_cost: document.getElementById('upd_total_cost').value,
-    };
-
-const fuel_record_elements = {
-    vehicle_id: document.getElementById('vehicle_id').value,
-    fueler_id: document.getElementById('fueler_id').value,
-    driver_id: document.getElementById('driver_id').value,
-    date: document.getElementById('date').value,
-    time: document.getElementById('time').value + ':00.000Z',
-    fuel_amount: document.getElementById('fuel_amount').value,
-    total_cost: document.getElementById('total_cost').value,
-    gas_station_name: document.getElementById('gas_station_name').value,
-    images_before: document.getElementById('images_before').value,
-    images_after: document.getElementById('images_after').value,
-    };
-
 export function UpdateButtonRow({ rowId, fetchMethod, setSwalShownUpdate, page }) 
 {
     const handleUpdate = async () => {
@@ -64,17 +38,41 @@ export function UpdateButtonRow({ rowId, fetchMethod, setSwalShownUpdate, page }
             {
             title: 'Update Record',
             focusConfirm: false,
+            customClass: 'swal-wide',
             didOpen: () => setSwalShownUpdate(true),
             didClose: () => setSwalShownUpdate(false),
             preConfirm: () => 
             {
                 // get the correct JSON body
                 switch (page) {
-                    case 'Maintenance':
-                        return maint_record_elements;
+                    case 'maintenance':
+                        return {
+                            vehicle_id: document.getElementById('upd_vehicle_id').options[document.getElementById('upd_vehicle_id').selectedIndex].value,
+                            driver_id: document.getElementById('upd_driver_id').options[document.getElementById('upd_driver_id').selectedIndex].value,
+                            maintainer_id: document.getElementById('upd_maintainer_id').options[document.getElementById('upd_maintainer_id').selectedIndex].value,
+                            mileage: document.getElementById('upd_mileage').value,
+                            date: document.getElementById('upd_date').value,
+                            time: document.getElementById('upd_time').value + 'Z', // last time, improper formats dropped the server
+                            maintenance_description: document.getElementById('upd_maintenance_description').value,
+                            repairing_parts: document.getElementById('upd_repairing_parts').value,
+                            replaced_parts: document.getElementById('upd_replaced_parts').value,
+                            images: document.getElementById('upd_images').value,
+                            total_cost: document.getElementById('upd_total_cost').value,
+                            };
                 
-                    case 'Fuel':
-                        return fuel_record_elements;
+                    case 'fuel':
+                        return {
+                            vehicle_id: document.getElementById('updf_vehicle_id').options[document.getElementById('updf_vehicle_id').selectedIndex].value,
+                            fueler_id: document.getElementById('updf_fueler_id').options[document.getElementById('updf_fueler_id').selectedIndex].value,
+                            driver_id: document.getElementById('updf_driver_id').options[document.getElementById('updf_driver_id').selectedIndex].value,
+                            date: document.getElementById('updf_date').value,
+                            time: document.getElementById('updf_time').value + 'Z',
+                            fuel_amount: document.getElementById('updf_fuel_amount').value,
+                            total_cost: document.getElementById('updf_total_cost').value,
+                            gas_station_name: document.getElementById('updf_gas_station_name').value,
+                            images_before: document.getElementById('updf_images_before').value,
+                            images_after: document.getElementById('updf_images_after').value,
+                            };
                     
                     default:
                         break;
@@ -86,7 +84,7 @@ export function UpdateButtonRow({ rowId, fetchMethod, setSwalShownUpdate, page }
         {
             // Make the API call with formValues
             console.log('Trying to POST: ' + JSON.stringify(formValues));
-            fetch(`https://plankton-app-b4yn3.ondigitalocean.app/maintenance_record/${rowId}`, {
+            fetch(`https://plankton-app-b4yn3.ondigitalocean.app/${page}_record/${rowId}`, {
                 method: 'PUT',
                 headers: {
                 'Content-Type': 'application/json',

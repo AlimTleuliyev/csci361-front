@@ -1,7 +1,6 @@
 // Auction.js
 import React, { useState, useEffect } from 'react';
-import AuctionList from './AuctionList';
-
+import './Auction.css'; // Ensure you have a corresponding CSS file for styles
 
 const Auction = () => {
     const [auctionItems, setAuctionItems] = useState([]);
@@ -27,8 +26,20 @@ const Auction = () => {
 
     return (
         <div>
-            <h1>Welcome to the Auction Page</h1>
-            <AuctionList auctionItems={auctionItems} />
+            <h2 className="text-center">Welcome to the Auction Page</h2>
+            <div className="row">
+                {auctionItems.map((item) => (
+                    <div className="column" key={item.id}>
+                        <div className="card">
+                            <img src={item.images} alt="Vehicle" style={{ width: '100%' }} />
+                            <div className="container">
+                                <h3>{item.information}</h3>
+                                <p className="title">Status: {item.status ? 'Active' : 'Inactive'}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

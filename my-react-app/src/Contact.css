@@ -47,3 +47,34 @@
 #contact-container button:hover {
     background-color: #45a049;
 }
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  label {
+    width: 500px; /* Adjust the width to your preference */
+    text-align: right;
+    margin-right: 10px;
+  }
+  input,
+  select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px; /* Adjust the font size to your preference */
+    text-align: left; /* Align text to the left */
+    border-left: 4px solid #000000; /* Border on the left side */
+    margin-right: 480px; /* Spacing between input/select and border */
+  }
+  
+  /* Placeholder text style */
+  input::placeholder,
+  select::placeholder {
+    color: #999;
+    font-size: 14px; /* Adjust the font size to your preference */
+    text-align: center; /* Center the placeholder text horizontally */
+  }

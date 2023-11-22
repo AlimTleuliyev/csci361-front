@@ -14,6 +14,7 @@ import AdminRoutePage from './AdminRoutePage.js';
 import AdminAuctionPage from './AdminAuctionPage.js';
 import FuelerPage from './Fueler.js';
 import MaintenancePage from './Maintanance.js';
+import Reports from './Reports.js';
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
           <Route path="/adminAuctions" element={<AdminAuctionPage/>}/>
           <Route path="/fueler" element={<FuelerPage/>}/>
           <Route path="/maintainer" element={<MaintenancePage/>}/>
-
+          <Route path="/Reports" element={<Reports />} />
         </Routes>
       </div>
     </Router>

@@ -95,6 +95,7 @@ const AdminPage = () => {
                 <Link to="/adminVehicles" className="link-button">Manage Vehicles</Link>
                 <Link to="/adminRoutes" className="link-button">Manage Routes</Link>
                 <Link to="/adminAuctions" className="link-button">Manage Auctions</Link>
+                <Link to="/Reports" className="link-button">Reports</Link>
             </div>
 
             {/* Add User Form */}

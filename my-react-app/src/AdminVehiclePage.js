@@ -20,7 +20,7 @@ const AdminVehiclePage = () => {
 
     const fetchVehicles = async () => {
         try {
-            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/vehicle/?skip=0&limit=10');
+            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/vehicle/all');
             const data = await response.json();
             setVehicles(data);
         } catch (error) {

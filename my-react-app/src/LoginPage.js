@@ -30,19 +30,24 @@ import { useNavigate } from 'react-router-dom';
         // Check if authentication was successful
         if (response.ok) {
           // Assuming the server returns the user role
-          const { role } = await response.json();
-
+          const userData = await response.json();
+          const { role } = userData;
+          const { id } = userData;
+          localStorage.setItem('userId', id);
           // Redirect based on the user role
           switch (role) {
             case 'admin':
               navigate('/admin');
               break;
             case 'driver':
-              navigate('/driver');
+              navigate('/driver/${id}');
               break;
-            case 'maintenance':
-              navigate('/maintenance-profile');
+            case 'maintainer':
+              navigate('/maintainer');
               break;
+            case 'fueler':
+                navigate('/fueler');
+                break;
             default:
               navigate('/user-profile');
           }
@@ -57,34 +62,38 @@ import { useNavigate } from 'react-router-dom';
 
 
     return (
-      
-        <div>
+      <div>
+        <h2>Sign In</h2>
+        <form onSubmit={handleSignIn}>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-            <h2>Sign In</h2>
-            <form onSubmit={handleSignIn}>
-                <label htmlFor="email">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-                <label htmlFor="password">Password:</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-
-                <button type="submit">Sign In</button>
-            </form>
-        </div>
-
-        
+          <div className="form-group">
+            <button type="submit">Sign In</button>
+          </div>
+        </form>
+      </div>
     );
 };
 

@@ -4,25 +4,30 @@ import './Contact.css';
 
 const Contact = () => {
     return (
-        <div id="contact-container" className="container">
+        <div>
             <h1>Contact Us</h1>
             <p>Have questions or feedback? Reach out to us!</p>
 
             <form>
-                <label>
-                    Name:
-                    <input type="text" name="name" />
-                </label>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                        <input
+                            type="text"
+                            name="middlename"
+                            value=''
+                          
+                        />
+                </div>
 
-                <label>
-                    Email:
+                <div className="form-group">
+                    <label>Email:</label>
                     <input type="email" name="email" />
-                </label>
+                </div>
 
-                <label>
-                    Message:
-                    <textarea name="message" rows="4"></textarea>
-                </label>
+                <div className="form-group">
+                    <label>Message:</label>
+                    <input name="message" rows="4"></input>
+                </div>
 
                 <button type="submit">Submit</button>
             </form>

@@ -1,0 +1,114 @@
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  label {
+    width: 500px; /* Adjust the width to your preference */
+    text-align: right;
+    margin-right: 10px;
+  }
+  
+  input,
+  select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px; /* Adjust the font size to your preference */
+    text-align: left; /* Align text to the left */
+    border-left: 4px solid #000000; /* Border on the left side */
+    margin-right: 480px; /* Spacing between input/select and border */
+  }
+  
+  /* Placeholder text style */
+  input::placeholder,
+  select::placeholder {
+    color: #999;
+    font-size: 14px; /* Adjust the font size to your preference */
+    text-align: center; /* Center the placeholder text horizontally */
+  }
+/* Style for the table */
+/* Style for the table */
+table {
+    width: calc(100% - 300px);
+    border-collapse: separate; /* Use separate border-collapse */
+    border-spacing: 0 5px; /* Add spacing between rows */
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  th,
+  td {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #000000;
+    text-align: center; /* Align text left for both headers and cells */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Add a border to cells */
+  }
+  
+  th {
+    background-color: #55608f; /* Header background color */
+    color: white;
+    padding: 1px 5px;
+    width:50px;
+
+  }
+  
+  thead th {
+    background-color: #55608f; /* Header background color */
+  }
+  
+  tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Style for "Update" button */
+  td .update-button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Style for "Delete" button */
+  td .delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .scrollmenu {
+    max-height: 500px; /* Adjust the height as needed for your layout */
+    overflow-y: auto; /* This will add vertical scrolling */
+    border: 1px solid #ddd; /* Add a border for better visibility (optional) */
+    margin: 10px 0; /* Add some spacing around the scroll menu (optional) */
+  }
+/* admin.css */
+.link-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 20px; /* Gives the rounded corners */
+    background-color: #4CAF50; /* Example button color */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .link-button:hover {
+    background-color: #45a049; /* Darker shade for hover effect */
+  }
+  
+  .link-button:active {
+    background-color: #3e8e41; /* Even darker shade for active/click effect */
+  }
+  

@@ -42,20 +42,21 @@ function App() {
     </Router>
   );
 }
-
 function Navbar() {
   return (
-    <nav>
+    <nav className="navbar">
+      <div className="vms-logo">VMS</div>
       <ul>
-        <li><a href="services">Services</a></li>
-        <li><a href="about">About Us</a></li>
-        <li><a href="contact">Contact</a></li>
-        <li><a href="auction">Auction</a></li>
-        <li><a href="login">Login</a></li>
+        <li><a href="/services">Services</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/auction">Auction</a></li>
+        <li><a href="/login">Login</a></li>
       </ul>
     </nav>
   );
 }
+
 
 function MainContent() {
   return (
@@ -116,6 +117,7 @@ function AppointmentForm() {
   };
 
   return (
+    
     <div>
       <h2>Make an Appointment</h2>
       <form onSubmit={handleSubmit}>
@@ -129,12 +131,12 @@ function AppointmentForm() {
         </div>
         <div className="form-group">
           <label htmlFor="departure_date">Date:</label>
-          <input type="date" id="departure_date" name="departure_date" required />
+          <input type="date" id="departure_date" name="departure_date" value={appointment.departure_date} required onChange={handleChange} />
         </div>
 
         <div className="form-group">
           <label htmlFor="departure_time">Time:</label>
-          <input type="time" id="departure_time" name="departure_time" min="09:00" max="18:00" required />
+          <input type="time" id="departure_time" name="departure_time" min="09:00" max="18:00" value={appointment.departure_time} required onChange={handleChange}/>
         </div>
 
         <div className="form-group">

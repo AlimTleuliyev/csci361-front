@@ -18,6 +18,7 @@ const AdminPage = () => {
         role: '',
         password: '',
     });
+    const [isAddingUser, setIsAddingUser] = useState(false);
 
     useEffect(() => {
         fetchUsers();
@@ -60,6 +61,7 @@ const AdminPage = () => {
                 password: '',
             });
         }
+        setIsAddingUser(false);
     };
 
     const handleUpdateUser = (user) => {
@@ -97,9 +99,14 @@ const AdminPage = () => {
                 <Link to="/adminAuctions" className="link-button">Manage Auctions</Link>
                 <Link to="/Reports" className="link-button">Reports</Link>
             </div>
+            
+            <h1>All Users</h1>
+            <button className="link-button-red" onClick={() => setIsAddingUser(!isAddingUser)}>
+                {isAddingUser ? '-' : '+'}
+            </button>
 
-            {/* Add User Form */}
-            <form onSubmit={ handleAddUser}>
+            {isAddingUser && (
+                <form onSubmit={ handleAddUser}>
                 <div class="form-group">
                     <label for="iin">IIN:</label>
                     <input
@@ -206,152 +213,151 @@ const AdminPage = () => {
                         />
                 </div>
                 <button type="submit">Add User</button>
-        </form>
-        <h1>All Users</h1>
+            </form>
+            )}
+            <div class="scrollmenu">
+            {/* List of Users */}
+                <table>
+                <thead>
+                    <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((user) => (
+                    <tr key={user.id} >
+                        <td>{user.name}</td>
+                        <td>{user.surname}</td>
+                        <td>{user.email}</td>
+                        <td>{user.role}</td>
+                        <td>
+                        <button className="update-button" onClick={() => handleUpdateUser(user)}>Update</button>
+                        <button className="delete-button" onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
+                </table>
+                {/* Conditional rendering for the update user form */}
+                {editingUser && (
+                    <div>
+                        <h3>Update User</h3>
+                        <form onSubmit={handleSaveUserUpdate}>
+                        <div className="form-group">
+                            <label htmlFor="iin">IIN:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.iin} 
+                            onChange={(e) => setEditingUser({ ...editingUser, iin: e.target.value })}
+                            />
+                        </div>
 
-         <div class="scrollmenu">
-          {/* List of Users */}
-            <table>
-            <thead>
-                <tr>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {users.map((user) => (
-                <tr key={user.id} >
-                    <td>{user.name}</td>
-                    <td>{user.surname}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                    <td>
-                    <button className="update-button" onClick={() => handleUpdateUser(user)}>Update</button>
-                    <button className="delete-button" onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                    </td>
-                </tr>
-                ))}
-            </tbody>
-            </table>
-            {/* Conditional rendering for the update user form */}
-            {editingUser && (
-                <div>
-                    <h3>Update User</h3>
-                    <form onSubmit={handleSaveUserUpdate}>
-                    <div className="form-group">
-                        <label htmlFor="iin">IIN:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.iin} 
-                        onChange={(e) => setEditingUser({ ...editingUser, iin: e.target.value })}
-                        />
+                        <div className="form-group">
+                            <label htmlFor="name">Name:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.name} 
+                            onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="surname">Surname:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.surname} 
+                            onChange={(e) => setEditingUser({ ...editingUser, surname: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="middlename">Middle Name:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.middlename} 
+                            onChange={(e) => setEditingUser({ ...editingUser, middlename: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="username">Username:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.username} 
+                            onChange={(e) => setEditingUser({ ...editingUser, username: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="address">Address:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.address} 
+                            onChange={(e) => setEditingUser({ ...editingUser, address: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="phone_number">Phone Number:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.phone_number} 
+                            onChange={(e) => setEditingUser({ ...editingUser, phone_number: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="email">Email:</label>
+                            <input 
+                            type="email" 
+                            value={editingUser.email} 
+                            onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="driver_license">Driver License:</label>
+                            <input 
+                            type="text" 
+                            value={editingUser.driver_license} 
+                            onChange={(e) => setEditingUser({ ...editingUser, driver_license: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="role">Role:</label>
+                            <select 
+                            value={editingUser.role} 
+                            onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })}
+                            >
+                            <option value="">Select Role</option>
+                            <option value="driver">Driver</option>
+                            <option value="maintainer">Maintainer</option>
+                            <option value="fueler">Fueler</option>
+                            {/* Add other roles as needed */}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="password">Password:</label>
+                            <input 
+                            type="password" 
+                            value={editingUser.password} 
+                            onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
+                            />
+                        </div>
+
+                        <button type="submit">Save Updates</button>
+                        </form>
                     </div>
-
-                    <div className="form-group">
-                        <label htmlFor="name">Name:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.name} 
-                        onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="surname">Surname:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.surname} 
-                        onChange={(e) => setEditingUser({ ...editingUser, surname: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="middlename">Middle Name:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.middlename} 
-                        onChange={(e) => setEditingUser({ ...editingUser, middlename: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="username">Username:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.username} 
-                        onChange={(e) => setEditingUser({ ...editingUser, username: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="address">Address:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.address} 
-                        onChange={(e) => setEditingUser({ ...editingUser, address: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="phone_number">Phone Number:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.phone_number} 
-                        onChange={(e) => setEditingUser({ ...editingUser, phone_number: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input 
-                        type="email" 
-                        value={editingUser.email} 
-                        onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="driver_license">Driver License:</label>
-                        <input 
-                        type="text" 
-                        value={editingUser.driver_license} 
-                        onChange={(e) => setEditingUser({ ...editingUser, driver_license: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="role">Role:</label>
-                        <select 
-                        value={editingUser.role} 
-                        onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })}
-                        >
-                        <option value="">Select Role</option>
-                        <option value="driver">Driver</option>
-                        <option value="maintainer">Maintainer</option>
-                        <option value="fueler">Fueler</option>
-                        {/* Add other roles as needed */}
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
-                        <input 
-                        type="password" 
-                        value={editingUser.password} 
-                        onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
-                        />
-                    </div>
-
-                    <button type="submit">Save Updates</button>
-                    </form>
-                </div>
-                )}
+                    )}
 
 
-        </div>
+            </div>
         </div>
     );
 };

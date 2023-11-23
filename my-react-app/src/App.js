@@ -17,6 +17,7 @@ import MaintenancePage from './Maintanance.js';
 import Reports from './Reports.js';
 
 function App() {
+  
   return (
     <Router>
 
@@ -34,9 +35,10 @@ function App() {
           <Route path="/adminVehicles" element={<AdminVehiclePage />} />
           <Route path="/adminRoutes" element={<AdminRoutePage/>}/>
           <Route path="/adminAuctions" element={<AdminAuctionPage/>}/>
-          <Route path="/fueler" element={<FuelerPage/>}/>
-          <Route path="/maintainer" element={<MaintenancePage/>}/>
+          <Route path="/fueler/:userId" element={<FuelerPage/>}/>
+          <Route path="/maintainer/:userId" element={<MaintenancePage/>}/>
           <Route path="/Reports" element={<Reports />} />
+          
         </Routes>
       </div>
     </Router>
@@ -59,11 +61,45 @@ function Navbar() {
 
 
 function MainContent() {
+  const [searchResults, setSearchResults] = useState([]);
+  const [isTableVisible, setIsTableVisible] = useState(false);
+
+  const handleSearch = (results) => {
+    setSearchResults(results);
+    setIsTableVisible(true); // Show the table after search
+
+  };
   return (
     <div>
-      <h1>Welcome to Vehicle Management System</h1>
       <AppointmentForm />
-      <SearchForm />
+      <>
+      <SearchForm onSearch={handleSearch} />
+        {isTableVisible && (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchResults.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.name}</td>
+                  <td>{user.surname}</td>
+                  <td>{user.username}</td>
+                  <td>{user.role}</td>
+                  <td>{user.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </>
+
     </div>
   );
 }
@@ -119,6 +155,10 @@ function AppointmentForm() {
   return (
     
     <div>
+      <div class="intro">
+        <h1>Welcome to Vehicle Management System</h1>
+        <p> comprehensive software solution designed for the purpose of managing vehicle fleets efficiently</p>
+      </div>
       <h2>Make an Appointment</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -155,14 +195,38 @@ function AppointmentForm() {
 
 
 
-function SearchForm() {
-  // Implement your search form here
+function SearchForm({ onSearch }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  }
+  
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    fetch(`https://plankton-app-b4yn3.ondigitalocean.app/users/name/${searchQuery}`)
+      .then((response) => response.json())
+      .then((data) => {
+        onSearch(data);
+      })
+      .catch((error) => {
+        console.error('Error searching for users:', error);
+      });
+  };
+
   return (
-    <div>
-      <h2>Search</h2>
-      {/* Your search form elements go here */}
+    <div class="search">
+      <form onSubmit={handleSearchSubmit}>
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchQuery}
+          onChange={handleSearchInputChange}
+        />
+        <button type="submit">Search</button>
+      </form>
     </div>
   );
 }
-
 export default App;

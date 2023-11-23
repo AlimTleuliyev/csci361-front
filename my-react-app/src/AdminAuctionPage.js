@@ -3,7 +3,6 @@ import './admin.css';
 import { Link } from 'react-router-dom';
 
 const AdminAuctionPage = () => {
-  // Updated state to match the database fields
   const [newAuction, setNewAuction] = useState({
     vehicle_id: '',
     images: '',
@@ -18,7 +17,6 @@ const AdminAuctionPage = () => {
     fetchAuctionItems();
   }, []);
 
-  // Define the fetchAuctionItems function
   const fetchAuctionItems = async () => {
     try {
       const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/auction/?skip=0&limit=10');
@@ -38,7 +36,6 @@ const AdminAuctionPage = () => {
       const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/vehicle/?skip=0&limit=10');
       if (response.ok) {
         const data = await response.json();
-        // Extract car IDs from the data and set them in the carIds state
         const ids = data.map((car) => car.id);
         setCarIds(ids);
       } else {
@@ -85,35 +82,44 @@ const AdminAuctionPage = () => {
   };
 
 const handleUpdateAuction = (auction) => {
-    setEditingAuction(auction);
-    setNewAuction({
-        ...newAuction,
-        vehicle_id: auction.vehicle_id,
-        images: auction.images,
-        information: auction.information,
-    });
+  setEditingAuction(auction);
+  setNewAuction({
+      vehicle_id: auction.vehicle_id,
+      images: auction.images,
+      information: auction.information,
+  });
 };
 
 const handleSaveUpdate = async (e) => {
-    e.preventDefault();
-    try {
-        const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/auction/${editingAuction.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newAuction),
-        });
+  e.preventDefault();
+  const auctionToUpdate = {
+      ...newAuction,
+      id: editingAuction.id, // Preserve the ID of the auction being edited
+  };
 
-        if (response.ok) {
-            setEditingAuction(null);
-            fetchAuctionItems();
-        } else {
-            console.error('Failed to update auction:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error updating auction:', error);
-    }
+  try {
+      const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/auction/${editingAuction.id}`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(auctionToUpdate),
+      });
+
+      if (response.ok) {
+          setEditingAuction(null);
+          setNewAuction({
+              vehicle_id: '',
+              images: '',
+              information: '',
+          });
+          fetchAuctionItems();
+      } else {
+          console.error('Failed to update auction:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error updating auction:', error);
+  }
 };
 
 const handleDeleteAuction = async (id) => {
@@ -139,40 +145,58 @@ const handleDeleteAuction = async (id) => {
                 <Link to="/adminVehicles" className="link-button">Manage Vehicles</Link>
                 <Link to="/adminRoutes" className="link-button">Manage Routes</Link>
                 <Link to="/admin" className="link-button">Manage Users</Link>
+                <Link to="/Reports" className="link-button">Reports</Link>
             </div>
-      <form onSubmit={handleAddAuction}>
-        <div className="form-group">
-          <label>Vehicle ID:</label>
-            <select
-              value={newAuction.vehicle_id}
-              onChange={(e) => setNewAuction({ ...newAuction, vehicle_id: e.target.value })}
-            >
-              <option value="">Select a Vehicle ID</option>
-              {carIds.map((id) => (
-                <option key={id} value={id}>
-                  {id}
-                </option>
-              ))}
-            </select>
-        </div>
-        <div className="form-group">
-          <label>Image URLs:</label>
-            <input
-              type="text"
-              value={newAuction.images}
-              onChange={(e) => setNewAuction({ ...newAuction, images: e.target.value })}
-            />
-          
-        </div>
-        <div className="form-group">
-          <label>Information about Car:</label>
-            <input
-              value={newAuction.information}
-              onChange={(e) => setNewAuction({ ...newAuction, information: e.target.value })}
-            />
-        </div>
-        <button type="submit">Create Auction</button>
-      </form>
+      <div> 
+        {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: '20px' }}> */}
+          <form onSubmit={handleAddAuction}>
+          <div className="form-group">
+            <label>Vehicle ID:</label>
+              <select
+                value={newAuction.vehicle_id}
+                onChange={(e) => setNewAuction({ ...newAuction, vehicle_id: e.target.value })}
+              >
+                <option value="">Select a Vehicle ID</option>
+                {carIds.map((id) => (
+                  <option key={id} value={id}>
+                    {id}
+                  </option>
+                ))}
+              </select>
+          </div>
+          <div className="form-group">
+            <label>Image URLs:</label>
+              <input
+                type="text"
+                value={newAuction.images}
+                onChange={(e) => setNewAuction({ ...newAuction, images: e.target.value })}
+              />
+            
+          </div>
+          <div className="form-group">
+            <label>Information about Car:</label>
+              <input
+                value={newAuction.information}
+                onChange={(e) => setNewAuction({ ...newAuction, information: e.target.value })}
+              />
+          </div>
+          <button type="submit">Create Auction</button>
+        </form>
+        {editingAuction && (
+          <div>
+            <form onSubmit={handleSaveUpdate}>
+              <div className="form-group">
+                {/* ...other inputs... */}
+              </div>
+              <button type="submit">Save Updates</button>
+            </form>
+          </div>
+        )}
+        {/* </div> */}
+      </div>
+      
+
+
 
       <h2>Existing Auctions</h2>
       <table>
@@ -199,14 +223,8 @@ const handleDeleteAuction = async (id) => {
         </tbody>
       </table>
 
-      {editingAuction && (
-        <div>
-          <h3>Update Auction</h3>
-          <form onSubmit={handleSaveUpdate}>
-            {/* ...form inputs and save updates button... */}
-          </form>
-        </div>
-      )}
+      
+
     </div>
   );
 };

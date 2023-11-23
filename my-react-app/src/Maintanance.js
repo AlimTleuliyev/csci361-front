@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './admin.css';
+import { useParams } from 'react-router-dom';
 const MaintenancePage = () => {
-
+    const { userId } = useParams();
+    const [maintainerId, setMaintainerId] = useState(userId);
     const [vehicles, setVehicles] = useState([]);
-    const [drivers, setDrivers] = useState([]);
     const [maintainers, setMaintainers] = useState([]);
+    const [maintenanceRecords, setMaintenanceRecords] = useState([]);
     const [maintenanceRecord, setMaintenanceRecord] = useState({
         vehicle_id: '',
         driver_id: '',
-        maintainer_id: '',
+        maintainer_id: userId,
         mileage: '',
         date_time: '',
         maintenance_description: '',
-        status: false, 
         repairing_parts: '',
         replaced_parts: '',
         images: '',
@@ -22,21 +23,27 @@ const MaintenancePage = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchDrivers();
+        setMaintainerId(userId);
+        console.log('Maintainer ID:', userId);
         fetchVehicles();
         fetchMaintenance();
-    }, []);
+        fetchMaintenanceRecords();
+    }, [userId]);
 
-    const fetchDrivers = async () => {
+    const fetchMaintenanceRecords = async () => {
         try {
-            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/drivers');
+            const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/users/${userId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-            setDrivers(data);
+            let m_records = data.maintainer_maintenance_records; // Declare f_records with const or let
+            setMaintenanceRecords(m_records);
         } catch (error) {
-            console.error('Error fetching drivers:', error);
+            console.error('Error fetching maintenance records:', error);
+            setError('Failed to fetch maintenance records');
         }
     };
-
     const fetchVehicles = async () => {
         try {
             const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/vehicle');
@@ -47,9 +54,26 @@ const MaintenancePage = () => {
         }
     };
 
+    const fetchDriver = async (vehicleId) => {
+        try {
+            const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/vehicle/${vehicleId}`);
+            
+            if (response.ok) {
+                const vehicleData = await response.json();
+                const driverId = vehicleData.driver_id;
+                setMaintenanceRecord(prev => ({ ...prev, driver_id: driverId }));
+                console.log(maintenanceRecord);
+            } else {
+                console.error('Error fetching driver:', response.status);
+            }
+        } catch (error) {
+            console.error('Error fetching driver:', error);
+        }
+    };
+    
     const fetchMaintenance = async () => {
         try {
-            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/maintenance_records');
+            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/maintenance_record');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -65,69 +89,52 @@ const MaintenancePage = () => {
         setMaintenanceRecord(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleCheckboxChange = (e) => {
-        const { name, checked } = e.target;
-        setMaintenanceRecord(prev => ({ ...prev, [name]: checked }));
-    };
-
-    const handleFileChange = (e) => {
-        // Assuming only single image is handled, not multiple
-        const { name, files } = e.target;
-        if (files.length > 0) {
-            setMaintenanceRecord(prev => ({ ...prev, [name]: files[0] }));
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
     
-        formData.append('vehicle_id', maintenanceRecord.vehicle_id);
-        formData.append('driver_id', maintenanceRecord.driver_id);
-        formData.append('maintainer_id', maintenanceRecord.maintainer_id);
-        formData.append('mileage', maintenanceRecord.mileage.toString());
-        formData.append('date_time', maintenanceRecord.date_time);
-        formData.append('maintenance_description', maintenanceRecord.maintenance_description);
-        formData.append('status', maintenanceRecord.status);
-        formData.append('repairing_parts', maintenanceRecord.repairing_parts);
-        formData.append('replaced_parts', maintenanceRecord.replaced_parts);
-        formData.append('total_cost', maintenanceRecord.total_cost.toString());
-    
-        if (maintenanceRecord.images) {
-            formData.append('images', maintenanceRecord.images);
-        }
+        // Fetch the driver_id based on the selected vehicle's ID
+        const selectedVehicleId = maintenanceRecord.vehicle_id;
+        fetchDriver(selectedVehicleId);
+        const [date, time] = maintenanceRecord.date_time.split('T');
+
+        const maintenanceRecordWithDateAndTime = {
+            ...maintenanceRecord,
+            date, // Assuming your backend requires a separate date field
+            time, // Assuming your backend requires a separate time field
+        };
     
         try {
             const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/maintenance_record', {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(maintenanceRecordWithDateAndTime),
             });
     
             if (response.ok) {
                 fetchMaintenance();
-                // Reset the newRoute form
+                // setError('');
                 setMaintenanceRecord({
                     vehicle_id: '',
                     driver_id: '',
-                    maintainer_id: '',
                     mileage: '',
                     date_time: '',
                     maintenance_description: '',
-                    status: false, // assuming false as default for status
                     repairing_parts: '',
                     replaced_parts: '',
                     images: '',
                     total_cost: '',
-                })
+                });
             } else {
-                // If the server responds with an error, handle it here
-                setError('Failed to save the maintenance record.');
+                const errorData = await response.json();
+                setError('Failed to save the maintenance record: ' + JSON.stringify(errorData));
             }
         } catch (err) {
-            // Handle network errors or other exceptions
-            setError('An error occurred during submission.');
+            setError('An error occurred: ' + err.message);
         }
     };
+    
     
 
     return (
@@ -135,6 +142,7 @@ const MaintenancePage = () => {
             <h2>Maintenance Record Entry</h2>
             
             {error && <p>Error: {error}</p>}
+            <p>Maintainer ID: {maintainerId}</p>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                 <label>Vehicle ID:</label>
@@ -144,10 +152,9 @@ const MaintenancePage = () => {
                             <option key={vehicle.id} value={vehicle.id}>{vehicle.id}</option>
                         ))}
                     </select>
-                
+                            
                 </div>
-
-                {/* ... similar dropdowns for driver_id and maintainer_id ... */}
+                
                 <div className="form-group">
                     <label> Mileage:</label>
                         <input type="number" name="mileage" value={maintenanceRecord.mileage} onChange={handleChange} required />
@@ -156,17 +163,10 @@ const MaintenancePage = () => {
                 <div className="form-group">
                 <label>Date and Time of Maintenance:</label>
                     <input type="datetime-local" name="date_time" value={maintenanceRecord.date_time} onChange={handleChange} required />
-                
                 </div>
                 <div className="form-group">
                 <label>Maintenance Description:</label>
                     <input name="maintenance_description" value={maintenanceRecord.maintenance_description} onChange={handleChange} required />
-                
-                </div>
-                <div className="form-group">
-                <label>Status:</label>
-                    <input type="checkbox" name="status" checked={maintenanceRecord.status} onChange={handleCheckboxChange} />
-                
                 </div>
                 <div className="form-group">
                 <label>Repairing Parts:</label>
@@ -182,10 +182,42 @@ const MaintenancePage = () => {
                 </div>
                 <div className="form-group">
                 <label>Images:</label>
-                    <input type="file" name="images" onChange={handleFileChange} />
+                    <input type="text" name="images" onChange={handleChange} />
                 </div>
 
                 <button type="submit">Submit</button>
+                <div>
+            <h2>Maintenance Records</h2>
+            {error && <p>Error: {error}</p>}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vehicle ID</th>
+                        <th>Driver ID</th>
+                        <th>Date Time</th>
+                        <th>Maintenance Description</th>
+                        <th>Repairing Parts</th>
+                        <th>Replaced Parts</th>
+                        <th>Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {maintenanceRecords.map((record) => (
+                        <tr key={record.id}>
+                            <td>{record.id}</td>
+                            <td>{record.vehicle_id}</td>
+                            <td>{record.driver_id}</td>
+                            <td>{record.date_time}</td>
+                            <td>{record.maintenance_description}</td>
+                            <td>{record.repairing_parts}</td>
+                            <td>{record.replaced_parts}</td>
+                            <td>{record.total_cost}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
             </form>
         </div>
     );

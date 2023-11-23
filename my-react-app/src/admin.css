@@ -16,7 +16,7 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px; /* Adjust the font size to your preference */
+    font-size: 12px; /* Adjust the font size to your preference */
     text-align: left; /* Align text to the left */
     border-left: 4px solid #000000; /* Border on the left side */
     margin-right: 480px; /* Spacing between input/select and border */
@@ -26,35 +26,40 @@
   input::placeholder,
   select::placeholder {
     color: #999;
-    font-size: 14px; /* Adjust the font size to your preference */
-    text-align: center; /* Center the placeholder text horizontally */
+    font-size: 14px; 
+    text-align: center; 
   }
-/* Style for the table */
-/* Style for the table */
 table {
-    width: calc(100% - 300px);
-    border-collapse: separate; /* Use separate border-collapse */
-    border-spacing: 0 5px; /* Add spacing between rows */
-    overflow: hidden;
-    margin: 0 auto;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  }
-  th,
-  td {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #000000;
-    text-align: center; /* Align text left for both headers and cells */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Add a border to cells */
-  }
-  
-  th {
-    background-color: #55608f; /* Header background color */
-    color: white;
-    padding: 1px 5px;
-    width:50px;
+  width: 100%; 
+  overflow-x: hidden;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
 
+th, td {
+  padding: 1px 5px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+th {
+  background-color: #55608f;
+  color: white;
+}
+
+/* Responsive table */
+@media (max-width: 600px) {
+  table {
+      display: block;
+      width: 100%;
+      overflow-x: hidden; 
   }
-  
+}
+
+.scrollmenu {
+  overflow-y: auto; 
+}
+
   thead th {
     background-color: #55608f; /* Header background color */
   }
@@ -111,4 +116,37 @@ table {
   .link-button:active {
     background-color: #3e8e41; /* Even darker shade for active/click effect */
   }
+  .modal {
+    display: block; /* Show the modal */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black with opacity */
+  }
   
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }

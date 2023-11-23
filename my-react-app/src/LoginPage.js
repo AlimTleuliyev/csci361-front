@@ -41,11 +41,11 @@ const LoginPage = () => {
             navigate(`/driver/${id}`);
             break;
           case 'maintainer':
-            navigate('/maintainer');
+            navigate(`/maintainer/${id}`);
             break;
           case 'fueler':
-            navigate('/fueler');
-            break;
+              navigate(`/fueler/${id}`);
+              break;
           default:
             navigate('/user-profile');
         }

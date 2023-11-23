@@ -8,6 +8,7 @@ const AdminRoutePage = () => {
     const [vehicles, setVehicles] = useState([]);
     const [appointments, setAppointments] = useState([]);
     const [editingRoute, setEditingRoute] = useState(null);
+    const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
     const [newRoute, setNewRoute] = useState({
         driver_id: '',
         vehicle_id: '',
@@ -62,12 +63,38 @@ const AdminRoutePage = () => {
             console.error('Error fetching routes:', error);
         }
     };
+    const openUpdateModal = (route) => {
+        setEditingRoute(route);
+        setNewRoute({ ...route }); 
+        setIsUpdateModalVisible(true);
+    };
+    const closeUpdateModal = () => {
+        setEditingRoute(null);
+        setIsUpdateModalVisible(false);
+    };
+    const getDriverNameById = (driver_id) => {
+        const driver = drivers.find(driver => driver.id === driver_id);
+        return driver ? driver.name : 'Unknown';
+    };
 
+    const getVehicleDetailsById = (vehicle_id) => {
+        const vehicle = vehicles.find(vehicle => vehicle.id === vehicle_id);
+        return vehicle ? vehicle.model + ' (' + vehicle.license_plate + ')' : 'Unknown';
+    };
+
+    const getAppointmentDetailsById = (appointment_id) => {
+        const appointment = appointments.find(appointment => appointment.id === appointment_id);
+        return appointment ? `${appointment.point_a} - ${appointment.point_b}` : 'Unknown';
+    };
     const handleUpdateRoute = (route) => {
         setEditingRoute(route);
-        // You can also prefill the form with the route details if needed
-        setNewRoute(route);
-    };
+        setNewRoute({ 
+            driver_id: route.driver_id,
+            vehicle_id: route.vehicle_id,
+            appointment_id: route.appointment_id,
+            status: route.status,
+            distance_covered: route.distance_covered
+        });    };
 
     const handleAddRoute = async (e) => {
         e.preventDefault();
@@ -99,24 +126,30 @@ const AdminRoutePage = () => {
         }
     };
     const handleSaveUpdate = async (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
+        e.preventDefault(); 
     
         try {
             const response = await fetch(`https://plankton-app-b4yn3.ondigitalocean.app/route/${editingRoute.id}`, {
-                method: 'PUT', // Use PUT method to update the route
+                method: 'PUT', 
                 headers: {
                     'Content-Type': 'application/json',
+                    'accept': 'application/json'
                 },
                 body: JSON.stringify(newRoute),
             });
     
             if (response.ok) {
-                // Update was successful, refresh the list of routes
                 fetchRoutes();
-                // Clear the editing state
-                setEditingRoute(null);
+                setNewRoute({ 
+                    driver_id: '',
+                    vehicle_id: '',
+                    appointment_id: '',
+                    status: false,
+                    distance_covered: 0,
+                });
+                setIsUpdateModalVisible(false);
+                setEditingRoute(null); 
             } else {
-                // Handle errors, e.g., display a message to the user
                 console.error('Failed to update route:', response.statusText);
             }
         } catch (error) {
@@ -150,6 +183,7 @@ const AdminRoutePage = () => {
                 <Link to="/adminVehicles" className="link-button">Manage Vehicles</Link>
                 <Link to="/admin" className="link-button">Manage Users</Link>
                 <Link to="/adminAuctions" className="link-button">Manage Auctions</Link>
+                <Link to="/Reports" className="link-button">Reports</Link>
             </div>
             <form onSubmit={handleAddRoute}>
                 {/* Dropdown for Drivers */}
@@ -158,7 +192,7 @@ const AdminRoutePage = () => {
                     <select value={newRoute.driver_id} onChange={(e) => setNewRoute({ ...newRoute, driver_id: e.target.value })}>
                         <option value="">Select a Driver</option>
                         {drivers.map((driver) => (
-                            <option key={driver.id} value={driver.id}>{driver.name}</option>
+                            <option key={driver.id} value={driver.id}>{driver.username}</option>
                         ))}
                     </select>
                 </div>
@@ -168,7 +202,7 @@ const AdminRoutePage = () => {
                     <select value={newRoute.vehicle_id} onChange={(e) => setNewRoute({ ...newRoute, vehicle_id: e.target.value })}>
                         <option value="">Select a Vehicle</option>
                         {vehicles.map((vehicle) => (
-                            <option key={vehicle.id} value={vehicle.id}>{vehicle.model}</option>
+                            <option key={vehicle.id} value={vehicle.id}>{vehicle.model} - {vehicle.license_plate}</option>
                         ))}
                     </select>
                 </div>
@@ -178,7 +212,7 @@ const AdminRoutePage = () => {
                     <select value={newRoute.appointment_id} onChange={(e) => setNewRoute({ ...newRoute, appointment_id: e.target.value })}>
                         <option value="">Select an Appointment</option>
                         {appointments.map((appointment) => (
-                            <option key={appointment.id} value={appointment.id}>{appointment.id}</option>
+                            <option key={appointment.id} value={appointment.id}>{appointment.point_a} - {appointment.point_b}</option>
                         ))}
                     </select>
                 </div>
@@ -197,86 +231,88 @@ const AdminRoutePage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {routes.map((route) => (
-                        <tr key={route.id}>
-                            <td>{route.driver_id}</td>
-                            <td>{route.vehicle_id}</td>
-                            <td>{route.appointment_id}</td>
-                            <td>
-                            <button onClick={() => handleUpdateRoute(route)}
-                                    style={{ marginDown: '5px' }}>Update</button>
-                                <button onClick={() => handleDeleteRoute(route.id)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
+                        {routes.map((route) => (
+                            <tr key={route.id}>
+                                <td>{getDriverNameById(route.driver_id)}</td>
+                                <td>{getVehicleDetailsById(route.vehicle_id)}</td>
+                                <td>{getAppointmentDetailsById(route.appointment_id)}</td>
+                                <td>
+                                    <button onClick={() => handleUpdateRoute(route)}>Update</button>
+                                    <button onClick={() => handleDeleteRoute(route.id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
 
             {/* Conditional rendering for the update form */}
             {editingRoute && (
-        <div>
-        <h3>Update Route</h3>
-        <form onSubmit={handleSaveUpdate}>
-            {/* Dropdown for Drivers */}
-            <div className="form-group">
-            <label>Driver:</label>
-            <select 
-                value={newRoute.driver_id} 
-                onChange={(e) => setNewRoute({ ...newRoute, driver_id: e.target.value })}
-            >
-                <option value="">Select a Driver</option>
-                {drivers.map((driver) => (
-                    <option key={driver.id} value={driver.id}>{driver.name}</option>
-                ))}
-            </select>
-            </div>
-            <div className="form-group">
-            {/* Dropdown for Vehicles */}
-            <label>Vehicle:</label>
-            <select 
-                value={newRoute.vehicle_id} 
-                onChange={(e) => setNewRoute({ ...newRoute, vehicle_id: e.target.value })}
-            >
-                <option value="">Select a Vehicle</option>
-                {vehicles.map((vehicle) => (
-                    <option key={vehicle.id} value={vehicle.id}>{vehicle.model}</option>
-                ))}
-            </select>
-            </div>
-            <div className="form-group">
-            {/* Dropdown for Appointments */}
-            <label>Appointment:</label>
-            <select 
-                value={newRoute.appointment_id} 
-                onChange={(e) => setNewRoute({ ...newRoute, appointment_id: e.target.value })}
-            >
-                <option value="">Select an Appointment</option> 
-                {appointments.map((appointment) => (
-                    <option key={appointment.id} value={appointment.id}>{appointment.id}</option>
-                ))}
-            </select>
-            </div>
-            <div className="form-group">
-            {/* Status Checkbox */}
-            <label>Status:</label>
-            <input 
-                type="checkbox" 
-                checked={newRoute.status} 
-                onChange={(e) => setNewRoute({ ...newRoute, status: e.target.checked })}
-            />
-            </div>
-            <div className="form-group">
-            {/* Distance Covered Input */}
-            <label>Distance Covered:</label>
-            <input 
-                type="number" 
-                value={newRoute.distance_covered} 
-                onChange={(e) => setNewRoute({ ...newRoute, distance_covered: parseFloat(e.target.value) })}
-            />
-            </div>
+                <div className="modal">
+                    <div className="modal-content">
+                    <span className="close" onClick={() => setEditingRoute(null)}>&times;</span>   
+                    <h3>Update Route</h3>
+                    <form onSubmit={handleSaveUpdate}>
+                        {/* Dropdown for Drivers */}
+                        <div className="form-group">
+                        <label>Driver:</label>
+                        <select 
+                            value={newRoute.driver_id} 
+                            onChange={(e) => setNewRoute({ ...newRoute, driver_id: e.target.value })}
+                        >
+                            <option value="">Select a Driver</option>
+                            {drivers.map((driver) => (
+                                <option key={driver.id} value={driver.id}>{driver.name}</option>
+                            ))}
+                        </select>
+                        </div>
+                        <div className="form-group">
+                        {/* Dropdown for Vehicles */}
+                        <label>Vehicle:</label>
+                        <select 
+                            value={newRoute.vehicle_id} 
+                            onChange={(e) => setNewRoute({ ...newRoute, vehicle_id: e.target.value })}
+                        >
+                            <option value="">Select a Vehicle</option>
+                            {vehicles.map((vehicle) => (
+                                <option key={vehicle.id} value={vehicle.id}>{vehicle.model}</option>
+                            ))}
+                        </select>
+                        </div>
+                        <div className="form-group">
+                        {/* Dropdown for Appointments */}
+                        <label>Appointment:</label>
+                        <select 
+                            value={newRoute.appointment_id} 
+                            onChange={(e) => setNewRoute({ ...newRoute, appointment_id: e.target.value })}
+                        >
+                            <option value="">Select an Appointment</option> 
+                            {appointments.map((appointment) => (
+                                <option key={appointment.id} value={appointment.id}>{appointment.id}</option>
+                            ))}
+                        </select>
+                        </div>
+                        <div className="form-group">
+                        {/* Status Checkbox */}
+                        <label>Status:</label>
+                        <input 
+                            type="checkbox" 
+                            checked={newRoute.status} 
+                            onChange={(e) => setNewRoute({ ...newRoute, status: e.target.checked })}
+                        />
+                        </div>
+                        <div className="form-group">
+                        {/* Distance Covered Input */}
+                        <label>Distance Covered:</label>
+                        <input 
+                            type="number" 
+                            value={newRoute.distance_covered} 
+                            onChange={(e) => setNewRoute({ ...newRoute, distance_covered: parseFloat(e.target.value) })}
+                        />
+                        </div>
 
-            <button type="submit">Save Updates</button>
+                        <button type="submit">Save Updates</button>
                     </form>
+                    </div>
                 </div>
             )}
         </div>

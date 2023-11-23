@@ -91,6 +91,21 @@ const About = () => {
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <div className="column">
+                    <div className="card">
+                        <div className="container">
+                            <h2>Arsen</h2>
+                            <p className="title">Frontend Developer</p>
+                            <p>3rd year CS student</p>
+                            <p>Arsen@nu.edu.kz</p>
+                            <p><button className="button" onClick={() => window.location = 'mailto:Arsen@nu.edu.kz'}>Contact</button></p>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
         </div>
     );
 };

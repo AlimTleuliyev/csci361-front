@@ -60,69 +60,72 @@ const Driver = () => {
             {loading ? (
                 <p>Loading driver information...</p>
             ) : driverInfo ? (
-                <>
-                    <div className='profile'>
-                        <p>Name: {driverInfo.name}</p>
-                        <p>Surname: {driverInfo.surname}</p>
-                        <p>Phone: {driverInfo.phone_number}</p>
-                        <p>Driver License: {driverInfo.driver_license}</p>
-                        <p>Email: {driverInfo.email}</p>
-                        <p> Call Center: +7 708 212 2002</p>
-
-                        {driverInfo.routes && driverInfo.routes.length > 0 && (
-                            <>
-                                <h3>Routes</h3>
-                                <ul>
-                                        {driverInfo.routes.map((route, index) => (
-                                            <li key={index}>
-                                                                                            <strong>Route ID:</strong> {route.id}
-                                                <br />
-                                                <strong>Distance Covered:</strong> {route.distance_covered} km
-                                                <br />
-                                                <strong>Route Time:</strong> {route.route_time} hours
-                                                <br />
-                                                <strong>Appointment Details:</strong>
-                                                <br />
-                                                <strong>Route Status:</strong> {route.status ? 'Completed' : 'Pending'}
-                                                <br />
-                                                <ul>
-                                                    <li>
-                                                        <strong>Point A:</strong> {route.appointment.point_a}
-                                                    </li>
-                                                    <li>
-                                                        <strong>Point B:</strong> {route.appointment.point_b}
-                                                    </li>
-                                                    <li>
-                                                        <strong>Departure Date:</strong> {route.appointment.departure_date}
-                                                    </li>
-                                                    <li>
-                                                        <strong>Departure Time:</strong> {route.appointment.departure_time}
-                                                    </li>
-                                                    <li>
-                                                        <strong>Capacity:</strong> {route.appointment.capacity}
-                                                    </li>
-                                                    <li>
-                                                        <strong>Comments:</strong> {route.appointment.comments}
-                                                    </li>
-                                            
-                                            </ul>
-
-                                                {/* Button to update route status */}
+                <div className='profile' style={{ backgroundColor: 'white', padding: '20px', borderRadius: '5px' }}>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>Name:</td>
+                                <td>{driverInfo.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Surname:</td>
+                                <td>{driverInfo.surname}</td>
+                            </tr>
+                            <tr>
+                                <td>Phone:</td>
+                                <td>{driverInfo.phone_number}</td>
+                            </tr>
+                            <tr>
+                                <td>Driver License:</td>
+                                <td>{driverInfo.driver_license}</td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td>{driverInfo.email}</td>
+                            </tr>
+                            <tr>
+                                <td>Call Center:</td>
+                                <td>+7 708 212 2002</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {driverInfo.routes && driverInfo.routes.length > 0 && (
+                        <>
+                            <h3>Routes</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Route ID</th>
+                                        <th>Distance Covered</th>
+                                        <th>Route Time</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {driverInfo.routes.map((route) => (
+                                        <tr key={route.id}>
+                                            <td>{route.id}</td>
+                                            <td>{route.distance_covered} km</td>
+                                            <td>{route.route_time} hours</td>
+                                            <td>{route.status ? 'Completed' : 'Pending'}</td>
+                                            <td>
                                                 {!route.status ? (
                                                     <button onClick={() => handleUpdateStatus(route.id)}>
                                                         Update Status to Completed
                                                     </button>
                                                 ) : (
-                                                    <p>Status: Completed</p>
+                                                    <span>Completed</span>
                                                 )}
-                                            </li>
+                                            </td>
+                                        </tr>
                                     ))}
-                                </ul>
-                            </>
-                        )}
-                        {/* Add other driver information fields as needed */}
-                    </div>
-                </>
+                                </tbody>
+                            </table>
+                        </>
+                    )}
+                    {/* Add other driver information fields as needed */}
+                </div>
             ) : (
                 <p>Error loading driver information.</p>
             )}

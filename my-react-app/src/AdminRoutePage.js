@@ -56,7 +56,7 @@ const AdminRoutePage = () => {
     
     const fetchRoutes = async () => {
         try {
-            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/route');
+            const response = await fetch('https://plankton-app-b4yn3.ondigitalocean.app/route/all');
             const data = await response.json();
             setRoutes(data);
         } catch (error) {
